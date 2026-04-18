@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obby Beta - Key System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 100%);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Partículas de fondo */
+        .particles {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: transparent;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .main-container {
+            background: rgba(15, 15, 25, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 50px 40px;
+            width: 420px;
+            text-align: center;
+            border: 1px solid rgba(100, 100, 255, 0.3);
+            box-shadow: 0 0 60px rgba(80, 100, 255, 0.4);
+            z-index: 2;
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.85); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .logo {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(45deg, #6366f1, #a855f7);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: 700;
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.6);
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #a5b4fc, #c4b5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            color: #a1a1aa;
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
+
+        .key-box {
+            background: #111118;
+            border: 2px solid #6366f1;
+            border-radius: 16px;
+            padding: 18px 24px;
+            font-size: 18px;
+            font-family: monospace;
+            letter-spacing: 4px;
+            margin: 25px 0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            word-break: break-all;
+            transition: all 0.4s ease;
+        }
+
+        .generate-btn {
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 17px;
+            font-weight: 600;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+            margin-top: 10px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.6);
+        }
+
+        .generate-btn:active {
+            transform: scale(0.96);
+        }
+
+        .copy-btn {
+            margin-top: 15px;
+            background: transparent;
+            border: 1px solid #6366f1;
+            color: #a5b4fc;
+            padding: 10px 24px;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        footer {
+            margin-top: 40px;
+            font-size: 13px;
+            color: #52525b;
+        }
+
+        .glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%);
+            filter: blur(60px);
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glow" style="top: 20%; left: 20%;"></div>
+    <div class="glow" style="bottom: 20%; right: 20%;"></div>
+
+    <div class="main-container">
+        <div class="logo">🔑</div>
+        <h1>Obby Beta</h1>
+        <p>Key System • Genera tu clave automáticamente</p>
+
+        <div id="keyDisplay" class="key-box">Presiona el botón para generar tu key</div>
+
+        <button class="generate-btn" onclick="generateKey()">Generar Key Nueva</button>
+        <button class="copy-btn" onclick="copyKey()">Copiar Key</button>
+
+        <footer>
+            Keys generadas son válidas por 24 horas • Made for Delta Executor
+        </footer>
+    </div>
+
+    <script>
+        let currentKey = "";
+
+        function generateKey() {
+            const prefix = "OBBY";
+            const segments = [];
+            
+            for (let i = 0; i < 3; i++) {
+                let segment = "";
+                for (let j = 0; j < 4; j++) {
+                    segment += String.fromCharCode(65 + Math.floor(Math.random() * 26));
+                }
+                segments.push(segment);
+            }
+
+            currentKey = `${prefix}-${segments[0]}-${segments[1]}-${segments[2]}`;
+
+            const keyBox = document.getElementById("keyDisplay");
+            keyBox.textContent = currentKey;
+            
+            // Animación al generar
+            keyBox.style.transform = "scale(0.95)";
+            setTimeout(() => {
+                keyBox.style.transform = "scale(1)";
+            }, 150);
+        }
+
+        function copyKey() {
+            if (!currentKey) {
+                alert("Primero genera una key");
+                return;
+            }
+            
+            navigator.clipboard.writeText(currentKey).then(() => {
+                const btn = document.querySelector(".copy-btn");
+                const originalText = btn.textContent;
+                btn.textContent = "¡Copiado! ✓";
+                btn.style.background = "#22c55e";
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = "transparent";
+                }, 2000);
+            });
+        }
+
+        // Generar una key automáticamente al cargar la página
+        window.onload = function() {
+            setTimeout(() => {
+                generateKey();
+            }, 800);
+        };
+    </script>
+</body>
+</html>
