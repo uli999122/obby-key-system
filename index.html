@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Temporada 2 Obby | Web Oficial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            <p>TEMPORADA 2 OBBY</p>
+            <p style="font-size: 12px; margin-top: 10px;">Cargando...</p>
+        </div>
+    </div>
+
+    <!-- Fondo de partículas -->
+    <canvas id="particlesCanvas"></canvas>
+
+    <div class="container">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-flag-checkered"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>TEMPORADA 2</h1>
+                    <p>OBBY BETA</p>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="#home">Inicio</a>
+                <a href="#updates">Actualizaciones</a>
+                <a href="#about">Acerca de</a>
+                <a href="#" id="openRobloxBtn" class="play-btn-nav">Jugar ahora</a>
+            </div>
+            <button class="mobile-menu" id="mobileMenu"><i class="fas fa-bars"></i></button>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-fire"></i> NUEVA TEMPORADA
+                </div>
+                <h1>SUPERA LOS<br>OBSTÁCULOS</h1>
+                <p>La mejor experiencia de obby en Roblox. Supera niveles desafiantes, consigue recompensas y conviértete en leyenda.</p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-value" id="playerCount">+10K</div>
+                        <div class="stat-label">Jugadores</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">50+</div>
+                        <div class="stat-label">Niveles</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">⭐ 4.9</div>
+                        <div class="stat-label">Valoración</div>
+                    </div>
+                </div>
+                <div class="cta-buttons">
+                    <button class="btn btn-primary" id="playNowBtn">
+                        <i class="fas fa-gamepad"></i> Jugar ahora
+                    </button>
+                    <button class="btn btn-secondary" id="copyDiscordBtn">
+                        <i class="fab fa-discord"></i> Discord
+                    </button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="floating-icon">
+                    <i class="fas fa-flag-checkered"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Actualizaciones -->
+        <section id="updates">
+            <div class="section-title">
+                <h2>📢 ÚLTIMAS ACTUALIZACIONES</h2>
+                <div class="subtitle">Novedades del juego en tiempo real</div>
+            </div>
+            <div class="updates-grid" id="updatesGrid">
+                <!-- Se llenará con JavaScript desde updates.json -->
+                <div class="update-card skeleton">
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line short"></div>
+                </div>
+                <div class="update-card skeleton">
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line short"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Acerca de -->
+        <section id="about">
+            <div class="section-title">
+                <h2>🎮 SOBRE EL JUEGO</h2>
+                <div class="subtitle">Descubre la experiencia</div>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Temporada 2 Obby es un juego de obstáculos lleno de desafíos, power-ups y una comunidad activa. Cada nivel está diseñado para poner a prueba tus reflejos y habilidad.</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-trophy"></i> Ranking semanal</li>
+                        <li><i class="fas fa-gem"></i> Recompensas exclusivas</li>
+                        <li><i class="fas fa-users"></i> Modo multijugador</li>
+                        <li><i class="fas fa-chart-line"></i> Actualizaciones frecuentes</li>
+                    </ul>
+                </div>
+                <div class="about-image">
+                    <div class="image-placeholder">
+                        <i class="fas fa-flag-checkered"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="social-links">
+                <a href="#" id="discordLink"><i class="fab fa-discord"></i></a>
+                <a href="#" id="twitterLink"><i class="fab fa-twitter"></i></a>
+                <a href="#" id="youtubeLink"><i class="fab fa-youtube"></i></a>
+                <a href="#" id="robloxLink"><i class="fab fa-roblox"></i></a>
+            </div>
+            <p>© 2025 Temporada 2 Obby - Todos los derechos reservados</p>
+            <p style="margin-top: 10px;">No oficialmente afiliado a Roblox Corporation</p>
+        </footer>
+    </div>
+
+    <!-- Reproductor de música flotante -->
+    <div class="music-player" id="musicPlayer">
+        <i class="fas fa-music" id="musicIcon"></i>
+        <span id="musicStatus">Música ON</span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
