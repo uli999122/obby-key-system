@@ -104,40 +104,73 @@
             gap: 6px;
         }
 
-        /* Reproductor */
-        .player-section {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 20px;
-            padding: 16px;
-            margin-bottom: 20px;
+        /* Reproductor Personalizado */
+        .custom-player {
+            background: #000000cc;
+            border-radius: 24px;
+            overflow: hidden;
+            margin-bottom: 24px;
+            backdrop-filter: blur(8px);
         }
 
-        .player-container {
+        .player-thumbnail {
             position: relative;
             width: 100%;
             padding-bottom: 56.25%;
-            border-radius: 16px;
-            overflow: hidden;
-            background: #000;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
         }
 
-        .player-container iframe {
+        .play-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            border: none;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .play-overlay:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .play-button {
+            width: 70px;
+            height: 70px;
+            background: #FF0000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            transition: 0.2s;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .play-button:hover {
+            transform: scale(1.05);
+            background: #cc0000;
         }
 
         .player-info {
-            margin-top: 12px;
-            text-align: center;
+            padding: 16px;
         }
 
         .player-title {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .player-stats {
+            font-size: 12px;
+            color: #aaa;
         }
 
         /* Tabs */
@@ -165,7 +198,7 @@
 
         /* Lista de videos (scroll) */
         .videos-scroll {
-            max-height: 400px;
+            max-height: 450px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -305,16 +338,22 @@
             <div class="stats-row">
                 <div class="stat-item"><i class="fas fa-users"></i> <span id="subCount">26.8K</span></div>
                 <div class="stat-item"><i class="fas fa-video"></i> <span id="videoCount">0</span> videos</div>
+                <div class="stat-item"><i class="fas fa-eye"></i> 1.2M vistas</div>
             </div>
         </div>
 
-        <!-- Reproductor personalizado -->
-        <div class="player-section">
-            <div class="player-container" id="playerContainer">
-                <iframe id="playerFrame" src="https://www.youtube.com/embed/CyvihZUFwSA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <!-- Reproductor Personalizado -->
+        <div class="custom-player">
+            <div id="playerThumbnail" class="player-thumbnail" style="background-image: url('https://img.youtube.com/vi/CyvihZUFwSA/maxresdefault.jpg');">
+                <div class="play-overlay" id="playButton">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
             </div>
             <div class="player-info">
-                <div class="player-title" id="playerTitle">Cargando...</div>
+                <div class="player-title" id="playerTitle">Mi mejor partida en Murder Mystery 2 🏆💖 | MM2 | PARTE 2</div>
+                <div class="player-stats" id="playerStats">57 vistas • 26 abr 2026</div>
             </div>
         </div>
 
@@ -332,10 +371,8 @@
         <!-- Redes sociales -->
         <div class="social-links">
             <a href="https://youtube.com/@LeylaparisX" class="social-btn" target="_blank"><i class="fab fa-youtube"></i></a>
-            <a href="https://www.roblox.com/users/9068484646/profile" class="social-btn" target="_blank"><i class="fab fa-roblox"></i></a>
-            <a href="#" class="social-btn" id="twitterLink"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="social-btn" id="instagramLink"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="social-btn" id="discordLink"><i class="fab fa-discord"></i></a>
+            <a href="https://www.roblox.com/es/users/8481186202/profile" class="social-btn" target="_blank"><i class="fab fa-roblox"></i></a>
+            <a href="https://www.instagram.com/leylaparisx/" class="social-btn" target="_blank"><i class="fab fa-instagram"></i></a>
         </div>
 
         <div class="footer">
@@ -347,56 +384,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <script>
-        // ========== DATOS DE VIDEOS (extraídos de tus enlaces) ==========
+        // ========== BASE DE DATOS DE VIDEOS (TUS ENLACES REALES) ==========
         const VIDEOS = [
-            {
-                id: "CyvihZUFwSA",
-                title: "Mi mejor partida en Murder Mystery 2 🏆💖 | MM2 | PARTE 2",
-                views: "57",
-                date: "2026-04-25",
-                type: "video"
-            },
-            {
-                id: "l1NXa6uXU4Q",
-                title: "Mi mejor partida en Murder Mystery 2 🏆💖 | MM2 | PARTE 1",
-                views: "1,156",
-                date: "2026-03-22",
-                type: "video"
-            },
-            {
-                id: "AJQxaNal_9M",
-                title: "Beyoncé Jajajaja #roblox #humor #viral #apoyo",
-                views: "471",
-                date: "2026-02-15",
-                type: "video"
-            }
+            { id: "CyvihZUFwSA", title: "Mi mejor partida en Murder Mystery 2 🏆💖 | MM2 | PARTE 2", views: "57", date: "2026-04-25", type: "video" },
+            { id: "l1NXa6uXU4Q", title: "Mi mejor partida en Murder Mystery 2 🏆💖 | MM2 | PARTE 1", views: "1,156", date: "2026-03-22", type: "video" },
+            { id: "AJQxaNal_9M", title: "Beyoncé Jajajaja #roblox #humor #viral #apoyo", views: "471", date: "2026-02-15", type: "video" }
         ];
 
         const SHORTS = [
-            { id: "kUN9IOgA2Go", title: "Short #1", views: "—", type: "short" },
-            { id: "u_7WvQDfewA", title: "Short #2", views: "—", type: "short" },
-            { id: "SaWybfvAnxg", title: "Short #3", views: "—", type: "short" },
-            { id: "Ab4EkCFbG4A", title: "Short #4", views: "—", type: "short" },
-            { id: "xqfAg1dLcuk", title: "Short #5", views: "—", type: "short" },
-            { id: "IgJkW6WbaEg", title: "Short #6", views: "—", type: "short" },
-            { id: "VD-NV0povxY", title: "Short #7", views: "—", type: "short" },
-            { id: "PaM_0YjS0lY", title: "Short #8", views: "—", type: "short" },
-            { id: "O2kN-0yuEpc", title: "Short #9", views: "—", type: "short" },
-            { id: "N33K36qmZJI", title: "Short #10", views: "—", type: "short" },
-            { id: "GTEm85Ld3Jo", title: "Short #11", views: "—", type: "short" },
-            { id: "__E651g9Zps", title: "Short #12", views: "—", type: "short" },
-            { id: "3iurJ_GnHI0", title: "ja😂 #roblox #humor", views: "2,060", type: "short" },
-            { id: "i7nIgQoEpeI", title: "Short #14", views: "—", type: "short" },
-            { id: "pZd4k708pk4", title: "Short #15", views: "717", type: "short" },
-            { id: "J6W3hY5Pt1Q", title: "Short #16", views: "—", type: "short" },
-            { id: "1GbFwGPQDyA", title: "Short #17", views: "—", type: "short" },
-            { id: "umHrcCXEpu0", title: "Short #18", views: "—", type: "short" }
+            { id: "1GbFwGPQDyA", title: "Short divertido #1", views: "—", type: "short" },
+            { id: "LNt2LO28OvQ", title: "Short divertido #2", views: "—", type: "short" },
+            { id: "U5heFrFgquk", title: "Short divertido #3", views: "—", type: "short" },
+            { id: "nBHcgrsCy4A", title: "Short divertido #4", views: "—", type: "short" },
+            { id: "Og5NFqKLDB4", title: "Short divertido #5", views: "—", type: "short" },
+            { id: "dFiBV8uI9HM", title: "Short divertido #6", views: "—", type: "short" },
+            { id: "iOvvRd7RYQI", title: "Short divertido #7", views: "—", type: "short" },
+            { id: "NaBiNRbTuJs", title: "Short divertido #8", views: "—", type: "short" },
+            { id: "oyMiXqrjNvM", title: "Short divertido #9", views: "—", type: "short" },
+            { id: "cY7wuJ17G6k", title: "Short divertido #10", views: "—", type: "short" },
+            { id: "8L_SRUF6lbY", title: "Short divertido #11", views: "—", type: "short" },
+            { id: "KIyh6BeN3-E", title: "Short divertido #12", views: "—", type: "short" },
+            { id: "ariyFhY_hIw", title: "Short divertido #13", views: "—", type: "short" },
+            { id: "m0NWNcJWT_8", title: "Short divertido #14", views: "—", type: "short" },
+            { id: "h0HZ9pb7FY0", title: "Short divertido #15", views: "—", type: "short" },
+            { id: "vhM09Tj1vG4", title: "Short divertido #16", views: "—", type: "short" },
+            { id: "gEEbDFOS5l0", title: "Short divertido #17", views: "—", type: "short" },
+            { id: "f5URFlgEwE4", title: "Short divertido #18", views: "—", type: "short" },
+            { id: "f5wtnZe6CAA", title: "Short divertido #19", views: "—", type: "short" },
+            { id: "HiQ7fP_lpPs", title: "Short divertido #20", views: "—", type: "short" }
         ];
 
         let currentList = "video";
         let allItems = [];
 
-        // Combinar y ordenar
+        // Combinar todos los elementos
         function buildList() {
             allItems = [
                 ...VIDEOS.map(v => ({ ...v, type: "video" })),
@@ -405,7 +426,7 @@
             document.getElementById("videoCount").innerText = allItems.length;
         }
 
-        // Renderizar lista
+        // Renderizar lista de videos
         function renderList() {
             const container = document.getElementById("videosList");
             const filtered = allItems.filter(item => currentList === "video" ? item.type === "video" : item.type === "short");
@@ -416,7 +437,7 @@
             }
 
             container.innerHTML = filtered.map(item => `
-                <div class="video-item" data-id="${item.id}" data-type="${item.type}">
+                <div class="video-item" data-id="${item.id}" data-type="${item.type}" data-title="${item.title.replace(/"/g, '&quot;')}" data-views="${item.views}" data-date="${item.date || '2026'}">
                     <div class="video-thumb" style="background-image: url('https://img.youtube.com/vi/${item.id}/mqdefault.jpg'); background-size: cover;"></div>
                     <div class="video-info">
                         <div class="video-title">${item.title.length > 50 ? item.title.substring(0, 50) + "..." : item.title}</div>
@@ -430,7 +451,11 @@
                 el.addEventListener("click", () => {
                     const id = el.getAttribute("data-id");
                     const type = el.getAttribute("data-type");
-                    playVideo(id, type);
+                    const title = el.getAttribute("data-title");
+                    const views = el.getAttribute("data-views");
+                    const date = el.getAttribute("data-date");
+                    
+                    playVideo(id, type, title, views, date);
                     
                     // Resaltar elemento activo
                     document.querySelectorAll(".video-item").forEach(i => i.classList.remove("active"));
@@ -439,20 +464,36 @@
             });
         }
 
-        // Reproductor
-        function playVideo(videoId, type) {
-            const playerFrame = document.getElementById("playerFrame");
-            const playerTitle = document.getElementById("playerTitle");
-            const video = allItems.find(v => v.id === videoId);
+        // Función para reproducir video en el reproductor personalizado
+        function playVideo(videoId, type, title, views, date) {
+            // Actualizar título y estadísticas
+            document.getElementById("playerTitle").innerText = title;
+            const formattedDate = date ? new Date(date).toLocaleDateString('es-ES') : "Fecha reciente";
+            document.getElementById("playerStats").innerHTML = `${views !== "—" ? views + " vistas" : "Nuevo"} • ${formattedDate}`;
             
-            if (video) playerTitle.innerText = video.title;
-            else playerTitle.innerText = "Reproduciendo...";
+            // Cambiar la imagen de fondo/miniatura
+            const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+            document.getElementById("playerThumbnail").style.backgroundImage = `url('${thumbnailUrl}')`;
             
-            if (type === "short") {
-                playerFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-            } else {
-                playerFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-            }
+            // Guardar el ID del video actual para el botón de reproducción
+            document.getElementById("playerThumbnail").setAttribute("data-current-id", videoId);
+        }
+
+        // Abrir YouTube al hacer clic en el botón de reproducción o en la miniatura
+        function setupPlayerEvents() {
+            const playerElement = document.getElementById("playerThumbnail");
+            const playBtn = document.getElementById("playButton");
+            
+            const openVideo = () => {
+                const videoId = playerElement.getAttribute("data-current-id") || "CyvihZUFwSA";
+                window.open(`https://youtube.com/watch?v=${videoId}`, "_blank");
+            };
+            
+            playerElement.addEventListener("click", openVideo);
+            playBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                openVideo();
+            });
         }
 
         // Cambiar pestaña
@@ -468,6 +509,14 @@
         renderList();
         setTab("video");
         
+        // Configurar el reproductor
+        setupPlayerEvents();
+        // Establecer el video inicial
+        if (VIDEOS.length > 0) {
+            const firstVideo = VIDEOS[0];
+            playVideo(firstVideo.id, firstVideo.type, firstVideo.title, firstVideo.views, firstVideo.date);
+        }
+        
         // Eventos de pestañas
         document.getElementById("tabVideos").addEventListener("click", () => setTab("video"));
         document.getElementById("TabShorts").addEventListener("click", () => setTab("short"));
@@ -476,11 +525,6 @@
         document.getElementById("subscribeBtn").addEventListener("click", () => {
             window.open("https://youtube.com/@LeylaparisX?sub_confirmation=1", "_blank");
         });
-        
-        // Redes sociales
-        document.getElementById("twitterLink")?.setAttribute("href", "https://twitter.com/intent/user?screen_name=LeylaparisDev");
-        document.getElementById("instagramLink")?.setAttribute("href", "https://instagram.com/leylaparisdev");
-        document.getElementById("discordLink")?.setAttribute("href", "https://discord.gg/leylaparis");
         
         // Avatar
         const avatarImg = document.getElementById("avatarImg");
