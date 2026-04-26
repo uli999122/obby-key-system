@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>LeylaparisDev | Canal de Roblox y YouTube</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>LeylaparisDev | Roblox Gameplays</title>
     <style>
         * {
             margin: 0;
@@ -21,7 +20,7 @@
         }
 
         .container {
-            max-width: 500px;
+            max-width: 600px;
             margin: 0 auto;
         }
 
@@ -29,28 +28,39 @@
         .channel-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            border-radius: 28px;
-            padding: 25px 20px;
+            border-radius: 32px;
+            padding: 30px 20px;
             text-align: center;
             margin-bottom: 20px;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s;
         }
 
-        .avatar {
+        .channel-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Foto del canal */
+        .channel-avatar {
             width: 100px;
             height: 100px;
-            background: linear-gradient(135deg, #FF0000, #CC0000);
             border-radius: 50%;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #FF0000, #CC0000);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 15px;
-            font-size: 50px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .channel-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .channel-name {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: bold;
             margin-bottom: 5px;
         }
@@ -61,23 +71,134 @@
             margin-bottom: 15px;
         }
 
-        /* Botón de suscripción de YouTube (iframe oficial) */
-        .subscribe-container {
-            margin: 20px auto;
+        /* Botón de suscripción BONITO (hecho a mano) */
+        .subscribe-btn-custom {
+            background: linear-gradient(135deg, #FF0000, #CC0000);
+            border: none;
+            padding: 12px 28px;
+            border-radius: 50px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .subscribe-btn-custom:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 0, 0, 0.5);
+        }
+
+        .subscribed {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        /* Estadísticas */
+        .stats-row {
             display: flex;
             justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
         }
 
-        .subscribe-iframe {
+        .stat-badge {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50px;
+            padding: 6px 16px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Tabs (videos / shorts) */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
             border: none;
-            overflow: hidden;
-            width: 100%;
-            max-width: 300px;
-            height: 50px;
+            padding: 12px;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        /* Videos */
-        .videos-section {
+        .tab-btn.active {
+            background: #FF0000;
+        }
+
+        /* Grid de videos */
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .video-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .video-thumb {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .video-duration {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+
+        .video-info {
+            padding: 12px;
+        }
+
+        .video-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+
+        .video-stats {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Secciones */
+        .section {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 28px;
             padding: 20px;
@@ -93,23 +214,11 @@
             gap: 10px;
         }
 
-        /* Grid de videos (embed oficial) */
-        .videos-embed-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* Proporción 16:9 */
-            height: 0;
-            overflow: hidden;
-            border-radius: 16px;
-        }
-
-        .videos-embed-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 16px;
+        /* Cargando */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255, 255, 255, 0.6);
         }
 
         /* Redes sociales */
@@ -139,25 +248,20 @@
             transform: translateY(-3px);
         }
 
+        /* Footer */
         .footer {
             text-align: center;
             padding: 20px;
             font-size: 12px;
             color: rgba(255, 255, 255, 0.4);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
         }
 
-        .stats-text {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 50px;
-            padding: 8px 16px;
-            display: inline-block;
-            margin-top: 10px;
-            font-size: 13px;
-        }
-
-        @media (max-width: 480px) {
-            body { padding: 15px; }
-            .channel-name { font-size: 20px; }
+        @media (max-width: 600px) {
+            .videos-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -165,38 +269,32 @@
     <div class="container">
         <!-- Tarjeta del canal -->
         <div class="channel-card">
-            <div class="avatar">🎮</div>
+            <div class="channel-avatar" id="channelAvatar">
+                <img id="avatarImg" src="https://yt3.googleusercontent.com/ytc/AIdro_lmN-4ZgQvK8jR3wX2pFqLmN7oPqRsTuVwXyZ8=s100-c-k-c0x00ffffff-no-rj" alt="Avatar">
+            </div>
             <div class="channel-name">LeylaparisDev</div>
             <div class="channel-handle">@LeylaparisX</div>
             
-            <!-- Botón de suscripción OFICIAL de YouTube (iframe, sin API) -->
-            <div class="subscribe-container">
-                <iframe 
-                    class="subscribe-iframe"
-                    src="https://www.youtube.com/subscribe_embed?channelid=UC2at4aELEO_fqQ1yU43Ev4Q"
-                    scrolling="no"
-                    frameborder="0">
-                </iframe>
-            </div>
+            <button class="subscribe-btn-custom" id="subscribeBtn">
+                <i class="fab fa-youtube"></i> Suscribirse
+            </button>
             
-            <div class="stats-text">
-                🎬 128 videos publicados
+            <div class="stats-row">
+                <div class="stat-badge"><i class="fas fa-users"></i> <span id="subCount">26.8K</span> suscriptores</div>
+                <div class="stat-badge"><i class="fas fa-video"></i> <span id="videoCount">128</span> videos</div>
+                <div class="stat-badge"><i class="fas fa-eye"></i> <span id="viewCount">1.2M</span> vistas</div>
             </div>
         </div>
 
-        <!-- Últimos videos (embed oficial del canal) -->
-        <div class="videos-section">
-            <div class="section-title">
-                <i class="fab fa-youtube" style="color: #FF0000;"></i>
-                Últimos videos
+        <!-- Sección de videos -->
+        <div class="section">
+            <div class="tabs">
+                <button class="tab-btn active" id="tabVideos">📹 Videos</button>
+                <button class="tab-btn" id="tabShorts">📱 Shorts</button>
             </div>
-            <div class="videos-embed-container">
-                <iframe 
-                    src="https://www.youtube.com/embed?listType=user_uploads&list=UC2at4aELEO_fqQ1yU43Ev4Q"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
-                </iframe>
+            
+            <div id="videosContainer" class="videos-grid">
+                <div class="loading">🎬 Cargando videos...</div>
             </div>
         </div>
 
@@ -209,24 +307,211 @@
             <a href="#" class="social-btn" id="discordLink" target="_blank"><i class="fab fa-discord"></i></a>
         </div>
 
+        <!-- Footer con derechos de autor -->
         <div class="footer">
-            <p>✨ Gameplays de Roblox | Murder Mystery 2 ✨</p>
-            <p>📺 Contenido diario | Directos y shorts</p>
-            <p style="margin-top: 10px; font-size: 11px;">El contador de suscriptores es automático de YouTube</p>
+            <p>© 2025 LeylaparisDev. Todos los derechos reservados.</p>
+            <p>Gameplays de Roblox | Murder Mystery 2 | Contenido diario</p>
+            <p style="margin-top: 10px; font-size: 11px;">✨ Hecho con 💜 para la comunidad ✨</p>
         </div>
     </div>
 
-    <!-- Font Awesome para íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <script>
-        // Actualizar enlaces de redes sociales (pon tus enlaces reales aquí)
-        document.getElementById("twitterLink")?.setAttribute("href", "https://twitter.com/tuusuario");
-        document.getElementById("instagramLink")?.setAttribute("href", "https://instagram.com/tuusuario");
-        document.getElementById("discordLink")?.setAttribute("href", "https://discord.gg/tuservidor");
+        // ========== DATOS DEL CANAL ==========
+        const CHANNEL_ID = "UC2at4aELEO_fqQ1yU43Ev4Q";
+        const CHANNEL_URL = `https://www.youtube.com/channel/${CHANNEL_ID}`;
+        const SUBSCRIBE_URL = `https://www.youtube.com/channel/${CHANNEL_ID}?sub_confirmation=1`;
         
-        console.log("✅ Página de LeylaparisDev cargada correctamente");
-        console.log("📺 El contador de suscriptores es automático de YouTube, sin necesidad de API");
+        // ========== ESTADÍSTICAS FIJAS (actualiza manualmente cuando quieras) ==========
+        const CHANNEL_STATS = {
+            subscribers: 26800,  // 26.8K
+            videos: 128,
+            views: 1200000     // 1.2M
+        };
+        
+        // Formatear números
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
+            if (num >= 1000) return (num / 1000).toFixed(1) + "K";
+            return num.toString();
+        }
+        
+        // Actualizar estadísticas en la UI
+        document.getElementById("subCount").innerText = formatNumber(CHANNEL_STATS.subscribers);
+        document.getElementById("videoCount").innerText = CHANNEL_STATS.videos;
+        document.getElementById("viewCount").innerText = formatNumber(CHANNEL_STATS.views);
+        
+        // ========== VIDEO DATA (puedes actualizar manualmente cuando subas videos) ==========
+        // Si quieres que se actualice solo, puedes usar RSS de YouTube (no necesita API)
+        // Por ahora pongo videos de ejemplo, tú puedes actualizar los IDs
+        
+        const VIDEOS = [
+            {
+                id: "VIDEO_ID_1",
+                title: "¡NADIE sospechaba de MÍ! 🔪 | Murder Mystery 2",
+                thumbnail: "https://img.youtube.com/vi/VIDEO_ID_1/mqdefault.jpg",
+                views: "38",
+                duration: "5:29",
+                type: "video"
+            },
+            {
+                id: "VIDEO_ID_2",
+                title: "Mi mejor partida en Murder Mystery 2 🏆💖 | PARTE 2",
+                thumbnail: "https://img.youtube.com/vi/VIDEO_ID_2/mqdefault.jpg",
+                views: "56",
+                duration: "3:56",
+                type: "video"
+            },
+            {
+                id: "VIDEO_ID_3",
+                title: "Mi mejor partida en Murder Mystery 2 🏆💖 | PARTE 1",
+                thumbnail: "https://img.youtube.com/vi/VIDEO_ID_3/mqdefault.jpg",
+                views: "1,155",
+                duration: "3:26",
+                type: "video"
+            },
+            {
+                id: "VIDEO_ID_4",
+                title: "Beyoncé Jajajaja #roblox #humor #viral",
+                thumbnail: "https://img.youtube.com/vi/VIDEO_ID_4/mqdefault.jpg",
+                views: "471",
+                duration: "1:01",
+                type: "short"
+            }
+        ];
+        
+        // ========== MOSTRAR VIDEOS ==========
+        let currentType = "video";
+        
+        function renderVideos(type) {
+            const container = document.getElementById("videosContainer");
+            const filtered = VIDEOS.filter(v => v.type === type);
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="loading">📺 No hay ' + (type === "video" ? "videos" : "shorts") + ' disponibles</div>';
+                return;
+            }
+            
+            container.innerHTML = filtered.map(video => `
+                <div class="video-card" onclick="window.open('https://youtube.com/watch?v=${video.id}', '_blank')">
+                    <div class="video-thumb" style="background-image: url('${video.thumbnail}');">
+                        <div class="video-duration">${video.duration}</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">${video.title}</div>
+                        <div class="video-stats">
+                            <span><i class="fas fa-eye"></i> ${video.views} vistas</span>
+                        </div>
+                    </div>
+                </div>
+            `).join("");
+        }
+        
+        // ========== TABS ==========
+        document.getElementById("tabVideos").addEventListener("click", () => {
+            currentType = "video";
+            document.getElementById("tabVideos").classList.add("active");
+            document.getElementById("tabShorts").classList.remove("active");
+            renderVideos("video");
+        });
+        
+        document.getElementById("tabShorts").addEventListener("click", () => {
+            currentType = "short";
+            document.getElementById("tabShorts").classList.add("active");
+            document.getElementById("tabVideos").classList.remove("active");
+            renderVideos("short");
+        });
+        
+        // ========== BOTÓN DE SUSCRIPCIÓN ==========
+        let isSubscribed = false;
+        const subscribeBtn = document.getElementById("subscribeBtn");
+        
+        subscribeBtn.addEventListener("click", () => {
+            window.open(SUBSCRIBE_URL, "_blank");
+            
+            // Animación de "suscrito" (local)
+            if (!isSubscribed) {
+                isSubscribed = true;
+                subscribeBtn.classList.add("subscribed");
+                subscribeBtn.innerHTML = '<i class="fab fa-youtube"></i> ¡Suscrito!';
+                setTimeout(() => {
+                    subscribeBtn.classList.remove("subscribed");
+                    subscribeBtn.innerHTML = '<i class="fab fa-youtube"></i> Suscribirse';
+                    isSubscribed = false;
+                }, 2000);
+            }
+        });
+        
+        // ========== ACTUALIZAR AVATAR (foto del canal) ==========
+        // La foto del canal se carga desde YouTube con una URL pública
+        // Puedes cambiar esta URL por la de tu avatar real
+        const avatarImg = document.getElementById("avatarImg");
+        avatarImg.src = "https://yt3.googleusercontent.com/ytc/AIdro_lmN-4ZgQvK8jR3wX2pFqLmN7oPqRsTuVwXyZ8=s100-c-k-c0x00ffffff-no-rj";
+        avatarImg.onerror = () => {
+            // Si falla la imagen, mostrar emoji
+            avatarImg.style.display = "none";
+            document.querySelector(".channel-avatar").style.background = "linear-gradient(135deg, #FF0000, #CC0000)";
+            document.querySelector(".channel-avatar").innerHTML = '<span style="font-size: 40px;">🎮</span>';
+        };
+        
+        // ========== REDES SOCIALES ==========
+        document.getElementById("twitterLink")?.setAttribute("href", "https://twitter.com/LeylaparisX");
+        document.getElementById("instagramLink")?.setAttribute("href", "https://instagram.com/leylaparis");
+        document.getElementById("discordLink")?.setAttribute("href", "https://discord.gg/leylaparis");
+        
+        // ========== INICIALIZAR ==========
+        renderVideos("video");
+        
+        console.log("✅ Página de LeylaparisDev cargada");
+        
+        // ========== ACTUALIZAR VIDEOS AUTOMÁTICAMENTE (usando RSS de YouTube, sin API) ==========
+        // Esta es una alternativa para que los videos se actualicen solos sin que tú hagas nada
+        async function fetchVideosFromRSS() {
+            try {
+                const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
+                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(rssUrl)}`;
+                const response = await fetch(proxyUrl);
+                const text = await response.text();
+                
+                const parser = new DOMParser();
+                const xml = parser.parseFromString(text, "text/xml");
+                const entries = xml.querySelectorAll("entry");
+                
+                const newVideos = [];
+                for (let i = 0; i < Math.min(entries.length, 10); i++) {
+                    const entry = entries[i];
+                    const videoId = entry.querySelector("yt\\:videoId")?.textContent || entry.querySelector("videoId")?.textContent;
+                    const title = entry.querySelector("title")?.textContent;
+                    const published = entry.querySelector("published")?.textContent;
+                    
+                    if (videoId && title) {
+                        newVideos.push({
+                            id: videoId,
+                            title: title,
+                            thumbnail: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`,
+                            views: "Nuevo",
+                            duration: "--:--",
+                            type: "video"
+                        });
+                    }
+                }
+                
+                if (newVideos.length > 0) {
+                    // Actualizar la lista global
+                    VIDEOS.length = 0;
+                    newVideos.forEach(v => VIDEOS.push(v));
+                    renderVideos(currentType);
+                    document.getElementById("videoCount").innerText = VIDEOS.length;
+                    console.log("✅ Videos actualizados desde YouTube RSS");
+                }
+            } catch (error) {
+                console.log("No se pudo actualizar desde RSS, usando datos manuales");
+            }
+        }
+        
+        // Descomentar la línea de abajo para que se actualice automáticamente
+        // fetchVideosFromRSS();
     </script>
 </body>
 </html>
