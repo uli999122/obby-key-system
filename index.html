@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>LeylaparisDev | Roblox Gameplays</title>
     <style>
         * {
@@ -104,6 +104,42 @@
             gap: 6px;
         }
 
+        /* Reproductor */
+        .player-section {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .player-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .player-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .player-info {
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .player-title {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
         /* Tabs */
         .tabs {
             display: flex;
@@ -127,14 +163,31 @@
             background: #FF0000;
         }
 
-        /* Grid de videos */
-        .videos-grid {
+        /* Lista de videos (scroll) */
+        .videos-scroll {
+            max-height: 400px;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
+            padding-right: 4px;
         }
 
-        .video-card {
+        .videos-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .videos-scroll::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .videos-scroll::-webkit-scrollbar-thumb {
+            background: #FF0000;
+            border-radius: 10px;
+        }
+
+        .video-item {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 14px;
             overflow: hidden;
@@ -145,13 +198,19 @@
             transition: 0.2s;
         }
 
-        .video-card:hover {
+        .video-item:hover {
             background: rgba(255, 0, 0, 0.2);
+            transform: translateX(4px);
+        }
+
+        .video-item.active {
+            background: rgba(255, 0, 0, 0.3);
+            border-left: 3px solid #FF0000;
         }
 
         .video-thumb {
-            width: 120px;
-            height: 68px;
+            width: 100px;
+            height: 56px;
             border-radius: 10px;
             background-size: cover;
             background-position: center;
@@ -227,12 +286,6 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             margin-top: 16px;
         }
-
-        .loading {
-            text-align: center;
-            padding: 30px;
-            color: rgba(255, 255, 255, 0.6);
-        }
     </style>
 </head>
 <body>
@@ -250,19 +303,29 @@
             </button>
             
             <div class="stats-row">
-                <div class="stat-item"><i class="fas fa-users"></i> <span id="subCount">--</span></div>
-                <div class="stat-item"><i class="fas fa-video"></i> <span id="videoCount">--</span> videos</div>
+                <div class="stat-item"><i class="fas fa-users"></i> <span id="subCount">26.8K</span></div>
+                <div class="stat-item"><i class="fas fa-video"></i> <span id="videoCount">0</span> videos</div>
             </div>
         </div>
 
-        <!-- Videos -->
+        <!-- Reproductor personalizado -->
+        <div class="player-section">
+            <div class="player-container" id="playerContainer">
+                <iframe id="playerFrame" src="https://www.youtube.com/embed/CyvihZUFwSA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="player-info">
+                <div class="player-title" id="playerTitle">Cargando...</div>
+            </div>
+        </div>
+
+        <!-- Tabs y lista de videos -->
         <div class="section">
             <div class="tabs">
-                <button class="tab active" id="tabVideos">📹 Videos</button>
-                <button class="tab" id="tabShorts">📱 Shorts</button>
+                <button class="tab active" id="tabVideos">🎬 Videos</button>
+                <button class="tab" id="TabShorts">📱 Shorts</button>
             </div>
-            <div id="videosList" class="videos-grid">
-                <div class="loading">🎬 Cargando videos...</div>
+            <div id="videosList" class="videos-scroll">
+                <div style="text-align: center; padding: 20px;">Cargando videos...</div>
             </div>
         </div>
 
@@ -284,175 +347,149 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <script>
-        // ========== DATOS DEL CANAL ==========
-        const CHANNEL_ID = "UC2at4aELEO_fqQ1yU43Ev4Q";
-        const CHANNEL_URL = `https://www.youtube.com/channel/${CHANNEL_ID}`;
-        const SUBSCRIBE_URL = `https://www.youtube.com/channel/${CHANNEL_ID}?sub_confirmation=1`;
-        
-        let allVideos = [];
-        let currentTab = "video";
-        
-        // ========== OBTENER DATOS DESDE RSS DE YOUTUBE (SIN API KEY) ==========
-        async function fetchYouTubeData() {
-            const videosList = document.getElementById("videosList");
-            videosList.innerHTML = '<div class="loading">🎬 Cargando videos...</div>';
-            
-            try {
-                // Obtener videos del canal via RSS
-                const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
-                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(rssUrl)}`;
-                
-                const response = await fetch(proxyUrl);
-                const text = await response.text();
-                
-                // Parsear XML
-                const parser = new DOMParser();
-                const xml = parser.parseFromString(text, "text/xml");
-                const entries = xml.querySelectorAll("entry");
-                
-                const videos = [];
-                let videoCount = 0;
-                
-                for (let i = 0; i < entries.length; i++) {
-                    const entry = entries[i];
-                    
-                    // Obtener ID del video
-                    let videoId = null;
-                    const videoIdElem = entry.querySelector("yt\\:videoId");
-                    if (videoIdElem) videoId = videoIdElem.textContent;
-                    if (!videoId) videoId = entry.querySelector("videoId")?.textContent;
-                    
-                    const title = entry.querySelector("title")?.textContent || "Sin título";
-                    const published = entry.querySelector("published")?.textContent;
-                    const author = entry.querySelector("author name")?.textContent;
-                    
-                    // Determinar si es short (por duración o título)
-                    let isShort = false;
-                    const group = entry.querySelector("media\\:group, group");
-                    if (group) {
-                        const durationElem = group.querySelector("yt\\:duration, duration");
-                        if (durationElem) {
-                            const duration = durationElem.getAttribute("seconds") || durationElem.textContent;
-                            if (duration && parseInt(duration) <= 60) isShort = true;
-                        }
-                    }
-                    
-                    if (videoId) {
-                        videos.push({
-                            id: videoId,
-                            title: title,
-                            thumbnail: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`,
-                            published: published,
-                            isShort: isShort,
-                            url: `https://youtube.com/watch?v=${videoId}`
-                        });
-                        videoCount++;
-                    }
-                }
-                
-                allVideos = videos;
-                
-                // Actualizar contador de videos
-                document.getElementById("videoCount").innerText = videoCount;
-                
-                // Obtener suscriptores (aproximado desde el canal)
-                try {
-                    const channelRss = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
-                    const channelResponse = await fetch(channelRss);
-                    const channelText = await channelResponse.text();
-                    const channelXml = parser.parseFromString(channelText, "text/xml");
-                    const titleElem = channelXml.querySelector("title");
-                    if (titleElem) {
-                        const fullTitle = titleElem.textContent;
-                        const match = fullTitle.match(/(\d+(?:\.\d+)?[KMB]?)/i);
-                        if (match) document.getElementById("subCount").innerHTML = match[1];
-                        else document.getElementById("subCount").innerHTML = "26.8K";
-                    }
-                } catch(e) {
-                    document.getElementById("subCount").innerHTML = "26.8K";
-                }
-                
-                renderVideos();
-                
-            } catch (error) {
-                console.error("Error cargando videos:", error);
-                videosList.innerHTML = '<div class="loading">⚠️ Error al cargar videos. Los datos se mostrarán manualmente.</div>';
-                // Datos de respaldo (manuales)
-                loadManualVideos();
+        // ========== DATOS DE VIDEOS (extraídos de tus enlaces) ==========
+        const VIDEOS = [
+            {
+                id: "CyvihZUFwSA",
+                title: "Mi mejor partida en Murder Mystery 2 🏆💖 | MM2 | PARTE 2",
+                views: "57",
+                date: "2026-04-25",
+                type: "video"
+            },
+            {
+                id: "l1NXa6uXU4Q",
+                title: "Mi mejor partida en Murder Mystery 2 🏆💖 | MM2 | PARTE 1",
+                views: "1,156",
+                date: "2026-03-22",
+                type: "video"
+            },
+            {
+                id: "AJQxaNal_9M",
+                title: "Beyoncé Jajajaja #roblox #humor #viral #apoyo",
+                views: "471",
+                date: "2026-02-15",
+                type: "video"
             }
-        }
-        
-        // ========== DATOS MANUALES (por si falla el RSS) ==========
-        function loadManualVideos() {
-            allVideos = [
-                { id: "dQw4w9WgXcQ", title: "¡NADIE sospechaba de MÍ! 🔪 | Murder Mystery 2", thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg", isShort: false, url: "https://youtube.com/watch?v=dQw4w9WgXcQ" },
-                { id: "dQw4w9WgXcQ", title: "Mi mejor partida en Murder Mystery 2 🏆💖 | PARTE 2", thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg", isShort: false, url: "https://youtube.com/watch?v=dQw4w9WgXcQ" },
-                { id: "dQw4w9WgXcQ", title: "Mi mejor partida en Murder Mystery 2 🏆💖 | PARTE 1", thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg", isShort: false, url: "https://youtube.com/watch?v=dQw4w9WgXcQ" },
-                { id: "dQw4w9WgXcQ", title: "Beyoncé Jajajaja #roblox #humor #viral", thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg", isShort: true, url: "https://youtube.com/watch?v=dQw4w9WgXcQ" }
+        ];
+
+        const SHORTS = [
+            { id: "kUN9IOgA2Go", title: "Short #1", views: "—", type: "short" },
+            { id: "u_7WvQDfewA", title: "Short #2", views: "—", type: "short" },
+            { id: "SaWybfvAnxg", title: "Short #3", views: "—", type: "short" },
+            { id: "Ab4EkCFbG4A", title: "Short #4", views: "—", type: "short" },
+            { id: "xqfAg1dLcuk", title: "Short #5", views: "—", type: "short" },
+            { id: "IgJkW6WbaEg", title: "Short #6", views: "—", type: "short" },
+            { id: "VD-NV0povxY", title: "Short #7", views: "—", type: "short" },
+            { id: "PaM_0YjS0lY", title: "Short #8", views: "—", type: "short" },
+            { id: "O2kN-0yuEpc", title: "Short #9", views: "—", type: "short" },
+            { id: "N33K36qmZJI", title: "Short #10", views: "—", type: "short" },
+            { id: "GTEm85Ld3Jo", title: "Short #11", views: "—", type: "short" },
+            { id: "__E651g9Zps", title: "Short #12", views: "—", type: "short" },
+            { id: "3iurJ_GnHI0", title: "ja😂 #roblox #humor", views: "2,060", type: "short" },
+            { id: "i7nIgQoEpeI", title: "Short #14", views: "—", type: "short" },
+            { id: "pZd4k708pk4", title: "Short #15", views: "717", type: "short" },
+            { id: "J6W3hY5Pt1Q", title: "Short #16", views: "—", type: "short" },
+            { id: "1GbFwGPQDyA", title: "Short #17", views: "—", type: "short" },
+            { id: "umHrcCXEpu0", title: "Short #18", views: "—", type: "short" }
+        ];
+
+        let currentList = "video";
+        let allItems = [];
+
+        // Combinar y ordenar
+        function buildList() {
+            allItems = [
+                ...VIDEOS.map(v => ({ ...v, type: "video" })),
+                ...SHORTS.map(s => ({ ...s, type: "short" }))
             ];
-            document.getElementById("videoCount").innerText = allVideos.length;
-            document.getElementById("subCount").innerHTML = "26.8K";
-            renderVideos();
+            document.getElementById("videoCount").innerText = allItems.length;
         }
-        
-        // ========== RENDERIZAR VIDEOS ==========
-        function renderVideos() {
+
+        // Renderizar lista
+        function renderList() {
             const container = document.getElementById("videosList");
-            const filtered = allVideos.filter(v => currentTab === "video" ? !v.isShort : v.isShort);
+            const filtered = allItems.filter(item => currentList === "video" ? item.type === "video" : item.type === "short");
             
             if (filtered.length === 0) {
-                container.innerHTML = '<div class="loading">📺 No hay ' + (currentTab === "video" ? "videos" : "shorts") + ' disponibles</div>';
+                container.innerHTML = '<div style="text-align: center; padding: 20px;">No hay elementos</div>';
                 return;
             }
-            
-            container.innerHTML = filtered.map(video => `
-                <div class="video-card" onclick="window.open('${video.url}', '_blank')">
-                    <div class="video-thumb" style="background-image: url('${video.thumbnail}'); background-size: cover;"></div>
+
+            container.innerHTML = filtered.map(item => `
+                <div class="video-item" data-id="${item.id}" data-type="${item.type}">
+                    <div class="video-thumb" style="background-image: url('https://img.youtube.com/vi/${item.id}/mqdefault.jpg'); background-size: cover;"></div>
                     <div class="video-info">
-                        <div class="video-title">${video.title.length > 60 ? video.title.substring(0, 60) + "..." : video.title}</div>
-                        <div class="video-meta"><i class="fab fa-youtube"></i> Ver en YouTube</div>
+                        <div class="video-title">${item.title.length > 50 ? item.title.substring(0, 50) + "..." : item.title}</div>
+                        <div class="video-meta"><i class="fab fa-youtube"></i> ${item.views !== "—" ? item.views + " vistas" : "Ver en YouTube"}</div>
                     </div>
                 </div>
             `).join("");
+
+            // Agregar eventos de clic
+            document.querySelectorAll(".video-item").forEach(el => {
+                el.addEventListener("click", () => {
+                    const id = el.getAttribute("data-id");
+                    const type = el.getAttribute("data-type");
+                    playVideo(id, type);
+                    
+                    // Resaltar elemento activo
+                    document.querySelectorAll(".video-item").forEach(i => i.classList.remove("active"));
+                    el.classList.add("active");
+                });
+            });
         }
+
+        // Reproductor
+        function playVideo(videoId, type) {
+            const playerFrame = document.getElementById("playerFrame");
+            const playerTitle = document.getElementById("playerTitle");
+            const video = allItems.find(v => v.id === videoId);
+            
+            if (video) playerTitle.innerText = video.title;
+            else playerTitle.innerText = "Reproduciendo...";
+            
+            if (type === "short") {
+                playerFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            } else {
+                playerFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            }
+        }
+
+        // Cambiar pestaña
+        function setTab(tab) {
+            currentList = tab;
+            document.getElementById("tabVideos").classList.toggle("active", tab === "video");
+            document.getElementById("TabShorts").classList.toggle("active", tab === "short");
+            renderList();
+        }
+
+        // ========== INICIALIZAR ==========
+        buildList();
+        renderList();
+        setTab("video");
         
-        // ========== TABS ==========
-        document.getElementById("tabVideos").addEventListener("click", () => {
-            currentTab = "video";
-            document.getElementById("tabVideos").classList.add("active");
-            document.getElementById("tabShorts").classList.remove("active");
-            renderVideos();
-        });
+        // Eventos de pestañas
+        document.getElementById("tabVideos").addEventListener("click", () => setTab("video"));
+        document.getElementById("TabShorts").addEventListener("click", () => setTab("short"));
         
-        document.getElementById("tabShorts").addEventListener("click", () => {
-            currentTab = "short";
-            document.getElementById("tabShorts").classList.add("active");
-            document.getElementById("tabVideos").classList.remove("active");
-            renderVideos();
-        });
-        
-        // ========== BOTÓN SUSCRIBIRSE ==========
+        // Botón suscribirse
         document.getElementById("subscribeBtn").addEventListener("click", () => {
-            window.open(SUBSCRIBE_URL, "_blank");
+            window.open("https://youtube.com/@LeylaparisX?sub_confirmation=1", "_blank");
         });
         
-        // ========== REDES SOCIALES ==========
+        // Redes sociales
         document.getElementById("twitterLink")?.setAttribute("href", "https://twitter.com/intent/user?screen_name=LeylaparisDev");
         document.getElementById("instagramLink")?.setAttribute("href", "https://instagram.com/leylaparisdev");
         document.getElementById("discordLink")?.setAttribute("href", "https://discord.gg/leylaparis");
         
-        // ========== FOTO DE PERFIL (URL REAL) ==========
-        // Usamos la imagen real del canal de YouTube
+        // Avatar
         const avatarImg = document.getElementById("avatarImg");
-        avatarImg.src = "https://yt3.googleusercontent.com/ytc/AIdro_lmN-4ZgQvK8jR3wX2pFqLmN7oPqRsTuVwXyZ8=s176-c-k-c0x00ffffff-no-rj";
         avatarImg.onerror = () => {
-            // Fallback a emoji si no carga
             const container = document.getElementById("avatarContainer");
             container.innerHTML = '<span style="font-size: 48px;">🎮</span>';
         };
         
-        // ========== INICIAR ==========
-        fetchYouTubeData();
+        console.log("✅ Página cargada con", allItems.length, "videos/shorts");
     </script>
 </body>
 </html>
