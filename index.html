@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>LeylaparisDev · Modo Kids + Personalizable</title>
+    <title>LeylaparisDev · El Rincón de los Gameplays</title>
     <style>
         * {
             margin: 0;
@@ -11,17 +12,18 @@
             box-sizing: border-box;
         }
 
-        /* Temas personalizables */
+        /* 🌈 Temas */
         :root {
             --bg-gradient-start: #0f0c29;
             --bg-gradient-end: #302b63;
             --card-bg: rgba(255, 255, 255, 0.1);
             --text-color: white;
             --accent-color: #FF0000;
+            --secondary-bg: rgba(0, 0, 0, 0.4);
         }
 
         body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
             min-height: 100vh;
             color: var(--text-color);
@@ -29,24 +31,29 @@
             transition: background 0.3s, color 0.3s;
         }
 
-        /* Fondo infantil (modo kids) */
+        /* Modo Kids (se activa con un atributo) */
         body.kids-mode {
             background: linear-gradient(135deg, #a0e9ff, #c1f0c1, #ffd1b3);
             --card-bg: rgba(255, 255, 255, 0.85);
             --text-color: #2d3748;
             --accent-color: #ff8c00;
+            --secondary-bg: rgba(0, 0, 0, 0.1);
         }
-        body.kids-mode .channel-card, 
+        body.kids-mode .channel-card,
         body.kids-mode .section {
             background: var(--card-bg);
             backdrop-filter: none;
             color: var(--text-color);
         }
         body.kids-mode .video-item {
-            background: rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.08);
+        }
+        body.kids-mode .subscribe-btn {
+            background: var(--accent-color);
+            color: white;
         }
 
-        /* Personajes flotantes (solo modo kids) */
+        /* Personajes flotantes */
         .floating-characters {
             position: fixed;
             top: 0;
@@ -60,7 +67,7 @@
             position: absolute;
             font-size: 40px;
             animation: float 6s infinite ease-in-out;
-            opacity: 0.5;
+            opacity: 0.4;
         }
         @keyframes float {
             0% { transform: translateY(0px) rotate(0deg); }
@@ -75,67 +82,29 @@
             z-index: 2;
         }
 
-        /* Botón de personalización */
-        .color-picker-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--accent-color);
-            border: none;
-            border-radius: 60px;
-            padding: 12px 18px;
-            color: white;
-            cursor: pointer;
-            z-index: 1000;
-            font-weight: bold;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .color-panel {
-            position: fixed;
-            bottom: 90px;
-            right: 20px;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 28px;
-            padding: 20px;
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
-            gap: 12px;
-            width: 220px;
-        }
-        .color-panel input {
-            width: 100%;
-            height: 40px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-        }
-
         /* Tarjeta del canal */
         .channel-card, .section {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-radius: 32px;
+            backdrop-filter: blur(12px);
+            border-radius: 40px;
             padding: 24px 20px;
             text-align: center;
             margin-bottom: 20px;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
         }
 
         .channel-avatar {
-            width: 90px;
-            height: 90px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
-            margin: 0 auto 12px;
+            margin: 0 auto 16px;
             overflow: hidden;
             background: linear-gradient(135deg, #FF0000, #CC0000);
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
         .channel-avatar img {
@@ -143,58 +112,107 @@
             height: 100%;
             object-fit: cover;
         }
-        .channel-name { font-size: 22px; font-weight: bold; }
-        .channel-handle { font-size: 13px; opacity: 0.8; margin-bottom: 12px; }
+
+        .channel-name {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .channel-handle {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 12px;
+        }
 
         .subscribe-btn {
             background: var(--accent-color);
             border: none;
-            padding: 10px 20px;
-            border-radius: 40px;
+            padding: 12px 24px;
+            border-radius: 50px;
             color: white;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 16px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin: 8px 0;
+            margin: 12px 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .subscribe-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .mode-badge {
+            background: rgba(0, 0, 0, 0.5);
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 60px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 8px;
         }
 
         /* Reproductor */
-        .player-section { margin-bottom: 20px; border-radius: 20px; overflow: hidden; background: #000; }
+        .player-section { margin-bottom: 20px; border-radius: 28px; overflow: hidden; background: rgba(0,0,0,0.8); box-shadow: 0 10px 25px rgba(0,0,0,0.2);}
         .player-container { position: relative; width: 100%; padding-bottom: 56.25%; }
         .player-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .player-info { background: rgba(0,0,0,0.6); padding: 12px; }
-        .player-title { font-size: 15px; font-weight: 600; }
+        .player-info { background: var(--secondary-bg); padding: 14px; }
+        .player-title { font-size: 16px; font-weight: 600; }
 
         /* Tabs */
-        .tabs { display: flex; gap: 12px; margin-bottom: 16px; }
+        .tabs { display: flex; gap: 12px; margin-bottom: 20px; }
         .tab {
-            flex: 1; background: rgba(255,255,255,0.1); border: none; padding: 10px;
-            border-radius: 50px; color: var(--text-color); font-weight: bold; cursor: pointer;
+            flex: 1; background: rgba(255,255,255,0.15); border: none; padding: 12px;
+            border-radius: 80px; color: var(--text-color); font-weight: 600; cursor: pointer;
+            transition: all 0.2s;
         }
-        .tab.active { background: var(--accent-color); color: white; }
+        .tab.active { background: var(--accent-color); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2);}
 
         /* Lista de vídeos (scroll) */
-        .videos-scroll { max-height: 420px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 4px; }
-        .video-item {
-            background: rgba(0,0,0,0.4); border-radius: 14px; display: flex; gap: 12px;
-            padding: 8px; cursor: pointer; transition: 0.2s;
-        }
-        .video-item:hover { background: var(--accent-color); opacity: 0.9; transform: translateX(4px); }
-        .video-thumb { width: 100px; height: 56px; border-radius: 10px; background-size: cover; background-position: center; }
-        .video-info { flex: 1; }
-        .video-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+        .videos-scroll { max-height: 500px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-right: 6px; }
+        .videos-scroll::-webkit-scrollbar { width: 4px; }
+        .videos-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        .videos-scroll::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
 
-        .social-links { display: flex; justify-content: center; gap: 16px; margin: 16px 0; }
-        .social-btn {
-            width: 44px; height: 44px; background: rgba(255,255,255,0.1); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; text-decoration: none;
-            color: white; font-size: 20px; transition: 0.2s;
+        .video-item {
+            background: var(--secondary-bg); border-radius: 20px; display: flex; gap: 14px;
+            padding: 10px; cursor: pointer; transition: all 0.2s ease; border: 1px solid transparent;
         }
-        .social-btn:hover { background: var(--accent-color); }
-        .footer { text-align: center; padding: 16px; font-size: 11px; opacity: 0.6; }
-        .mode-badge { background: #2c3e66; display: inline-block; padding: 4px 14px; border-radius: 50px; font-size: 12px; margin-top: 8px; }
+        .video-item:hover { background: var(--accent-color); transform: translateX(6px); border-color: rgba(255,255,255,0.3);}
+        .video-thumb { width: 110px; height: 62px; border-radius: 16px; background-size: cover; background-position: center; box-shadow: 0 2px 6px rgba(0,0,0,0.2);}
+        .video-info { flex: 1; }
+        .video-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; line-height: 1.3; }
+
+        /* Botón Control Parental */
+        .parental-btn {
+            background: #FF4500;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 60px;
+            color: white;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-size: 14px;
+            transition: 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .parental-btn:hover { transform: scale(1.02); background: #e63900; }
+
+        .social-links { display: flex; justify-content: center; gap: 18px; margin: 24px 0 16px; }
+        .social-btn {
+            width: 48px; height: 48px; background: var(--card-bg); backdrop-filter: blur(4px); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; text-decoration: none;
+            color: white; font-size: 22px; transition: 0.2s;
+        }
+        .social-btn:hover { background: var(--accent-color); transform: translateY(-3px);}
+        .footer { text-align: center; padding: 20px; font-size: 12px; opacity: 0.7; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px;}
     </style>
 </head>
 <body>
@@ -206,17 +224,18 @@
             <div class="channel-name">LeylaparisDev</div>
             <div class="channel-handle">@LeylaparisX</div>
             <button class="subscribe-btn" id="subscribeBtn"><i class="fab fa-youtube"></i> Suscribirse</button>
-            <div id="modeIndicator" class="mode-badge">🎒 Cargando modo...</div>
+            <div id="modeIndicator" class="mode-badge">🎒 Modo: Normal</div>
+            <div><button class="parental-btn" id="parentalBtn"><i class="fas fa-lock"></i> Control Parental</button></div>
         </div>
 
         <div class="player-section">
             <div class="player-container"><iframe id="playerFrame" src="about:blank" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
-            <div class="player-info"><div class="player-title" id="playerTitle">Selecciona un vídeo</div></div>
+            <div class="player-info"><div class="player-title" id="playerTitle">🎬 Disfruta del contenido</div></div>
         </div>
 
         <div class="section">
-            <div class="tabs"><button class="tab active" id="tabVideos">🎬 Videos</button><button class="tab" id="TabShorts">📱 Shorts</button></div>
-            <div id="videosList" class="videos-scroll"><div style="text-align:center; padding:20px;">Cargando contenido...</div></div>
+            <div class="tabs"><button class="tab active" id="tabVideos">🎥 Videos</button><button class="tab" id="TabShorts">📱 Shorts</button></div>
+            <div id="videosList" class="videos-scroll"><div style="text-align:center; padding:30px;">✨ Cargando los mejores momentos ✨</div></div>
         </div>
 
         <div class="social-links">
@@ -224,34 +243,27 @@
             <a href="https://www.roblox.com/es/users/8481186202/profile" class="social-btn" target="_blank"><i class="fab fa-roblox"></i></a>
             <a href="https://www.instagram.com/leylaparisx/" class="social-btn" target="_blank"><i class="fab fa-instagram"></i></a>
         </div>
-        <div class="footer"><p>© 2026 LeylaparisDev · Contenido automático desde YouTube</p></div>
-    </div>
-
-    <button class="color-picker-btn" id="colorPickerBtn">🌈 Personalizar</button>
-    <div class="color-panel" id="colorPanel">
-        <label style="font-size:12px;">Color 1</label><input type="color" id="color1" value="#0f0c29">
-        <label style="font-size:12px;">Color 2</label><input type="color" id="color2" value="#302b63">
-        <label style="font-size:12px;">Color acento</label><input type="color" id="accentColor" value="#FF0000">
-        <button id="resetColors" style="background:#333; border:none; padding:8px; border-radius:20px; color:white;">Restablecer</button>
+        <div class="footer"><p>© 2026 LeylaparisDev · El juego nunca termina</p></div>
     </div>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>
-        // -------------------- CONFIGURACIÓN DE CONTENIDO KIDS --------------------
-        // 📌 TÚ decides qué IDs van aquí (los que son seguros para niños)
-        const VIDEOS_KIDS = [];  // IDs de videos largos aptos para niños
-        const SHORTS_KIDS = [
+        // ---------- 🔐  ENLACE DEL FORMULARIO DE CONTROL PARENTAL ----------
+        // 👇 Aquí está tu enlace ya pegado
+        const PARENTAL_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSe5Gv_J0PVPlYKwYwZp6Cit50sKNWmhkGBqyIPCHAssl7IqxQ/viewform?usp=publish-editor";
+
+        // 📌 IDs de los SHORTS que SÍ se muestran en MODO KIDS (solo estos son seguros)
+        const KIDS_SHORTS_IDS = [
             "Ab4EkCFbG4A", "xqfAg1dLcuk", "SaWybfvAnxg", "VD-NV0povxY",
             "PaM_0YjS0lY", "3iurJ_GnHI0", "i7nIgQoEpeI"
         ];
+        // ---------- FIN DE LA CONFIGURACIÓN ----------
 
-        // -------------------- VARIABLES GLOBALES --------------------
-        let currentAgeMode = null;      // 'kids' o 'normal'
-        let currentListType = "video";  // 'video' o 'short'
-        let allVideos = [];              // Todos los videos desde RSS
-        let currentFilteredItems = [];
+        let isKidsMode = false;      
+        let allVideos = [];          
+        let currentType = "video";  
 
-        // -------------------- 1. CARGAR VÍDEOS DESDE RSS (AUTOMÁTICO) --------------------
+        // Cargar vídeos desde RSS (automático)
         async function loadVideosFromRSS() {
             const channelId = "UC2at4aELEO_fqQ1yU43Ev4Q";
             const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
@@ -275,40 +287,32 @@
                     }
                     allVideos.push({ id: videoId, title: title, type: isShort ? "short" : "video" });
                 }
-                console.log(`✅ Cargados ${allVideos.length} vídeos desde RSS`);
-                applyFilterAndRender();
+                console.log(`✅ Cargados ${allVideos.length} vídeos desde YouTube`);
+                updateUI();
             } catch (error) {
-                console.error("Error cargando RSS", error);
-                document.getElementById("videosList").innerHTML = '<div style="padding:20px;">❌ Error cargando vídeos</div>';
+                console.error("Error al cargar el feed", error);
+                document.getElementById("videosList").innerHTML = '<div style="padding:20px;">❌ No se pudieron cargar los vídeos. Inténtalo más tarde.</div>';
             }
         }
 
-        function applyFilterAndRender() {
-            if (!allVideos.length) return;
-            if (currentAgeMode === 'kids') {
-                currentFilteredItems = allVideos.filter(v => 
-                    (v.type === "video" && VIDEOS_KIDS.includes(v.id)) ||
-                    (v.type === "short" && SHORTS_KIDS.includes(v.id))
-                );
-            } else {
-                currentFilteredItems = allVideos;
-            }
-            renderList();
+        function getFilteredVideos() {
+            if (!isKidsMode) return allVideos;
+            return allVideos.filter(v => v.type === "short" && KIDS_SHORTS_IDS.includes(v.id));
         }
 
-        function renderList() {
+        function updateUI() {
+            let filtered = getFilteredVideos().filter(v => currentType === "video" ? v.type === "video" : v.type === "short");
             const container = document.getElementById("videosList");
-            let filtered = currentFilteredItems.filter(i => currentListType === "video" ? i.type === "video" : i.type === "short");
             if (filtered.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:20px;">✨ No hay contenido en esta categoría ✨</div>';
+                container.innerHTML = '<div style="text-align:center; padding:30px;">🧸 No hay contenido disponible en este momento.</div>';
                 return;
             }
-            container.innerHTML = filtered.map(item => `
-                <div class="video-item" data-id="${item.id}" data-title="${item.title.replace(/"/g, '&quot;')}">
-                    <div class="video-thumb" style="background-image: url('https://img.youtube.com/vi/${item.id}/mqdefault.jpg');"></div>
+            container.innerHTML = filtered.map(v => `
+                <div class="video-item" data-id="${v.id}" data-title="${v.title.replace(/"/g, '&quot;')}">
+                    <div class="video-thumb" style="background-image: url('https://img.youtube.com/vi/${v.id}/mqdefault.jpg');"></div>
                     <div class="video-info">
-                        <div class="video-title">${item.title.length > 50 ? item.title.substring(0,50)+"..." : item.title}</div>
-                        <div class="video-meta"><i class="fab fa-youtube"></i> ${item.type === "short" ? "Short" : "Video"}</div>
+                        <div class="video-title">${v.title.length > 55 ? v.title.substring(0,55)+"…" : v.title}</div>
+                        <div class="video-meta"><i class="fab fa-youtube"></i> ${v.type === "short" ? "Short" : "Video"}</div>
                     </div>
                 </div>
             `).join("");
@@ -322,108 +326,59 @@
             });
         }
 
-        function playVideo(videoId, title) {
-            document.getElementById("playerFrame").src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        function playVideo(id, title) {
+            document.getElementById("playerFrame").src = `https://www.youtube.com/embed/${id}?autoplay=1`;
             document.getElementById("playerTitle").innerText = title;
         }
 
-        // -------------------- VERIFICACIÓN DE EDAD --------------------
-        function calcularEdad(fechaNacimiento) {
-            let hoy = new Date(), nacimiento = new Date(fechaNacimiento);
-            let edad = hoy.getFullYear() - nacimiento.getFullYear();
-            let mesDiff = hoy.getMonth() - nacimiento.getMonth();
-            if (mesDiff < 0 || (mesDiff === 0 && hoy.getDate() < nacimiento.getDate())) edad--;
-            return edad;
-        }
-
-        function iniciarConEdad(edad) {
-            currentAgeMode = (edad < 12) ? 'kids' : 'normal';
-            localStorage.setItem('userAgeMode', currentAgeMode);
-            // Aplicar estilo y personajes
-            if (currentAgeMode === 'kids') {
-                document.body.classList.add('kids-mode');
+        function toggleKidsMode(enable) {
+            isKidsMode = enable;
+            if (isKidsMode) {
+                document.body.classList.add("kids-mode");
+                document.getElementById("modeIndicator").innerHTML = "🧸 Modo Kids Activo";
+                document.getElementById("modeIndicator").style.background = "#3b82f6";
                 generateFloatingCharacters();
             } else {
-                document.body.classList.remove('kids-mode');
-                document.getElementById("floatingChars").innerHTML = '';
+                document.body.classList.remove("kids-mode");
+                document.getElementById("modeIndicator").innerHTML = "🎒 Modo: Normal";
+                document.getElementById("modeIndicator").style.background = "rgba(0,0,0,0.5)";
+                document.getElementById("floatingChars").innerHTML = "";
             }
-            let badge = document.getElementById("modeIndicator");
-            if (currentAgeMode === 'kids') {
-                badge.innerHTML = "🧸 Modo Kids (contenido filtrado)";
-                badge.style.background = "#3b82f6";
-            } else {
-                badge.innerHTML = "🔥 Modo Normal (contenido completo)";
-                badge.style.background = "#ef4444";
-            }
-            applyFilterAndRender();
-            setTab("video");
-            if (currentFilteredItems.length) playVideo(currentFilteredItems[0].id, currentFilteredItems[0].title);
+            updateUI();
+            if (getFilteredVideos().length) playVideo(getFilteredVideos()[0].id, getFilteredVideos()[0].title);
         }
 
         function generateFloatingCharacters() {
-            let container = document.getElementById("floatingChars");
+            const container = document.getElementById("floatingChars");
             container.innerHTML = "";
-            let chars = ["🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐨", "🐸", "🐒", "🐥", "🦄", "⭐", "🌈", "🍭"];
-            for (let i = 0; i < 15; i++) {
+            const icons = ["🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐨", "🐸", "🐒", "🐥", "🦄", "⭐", "🌈", "🍭", "🧸", "🎈"];
+            for (let i = 0; i < 20; i++) {
                 let char = document.createElement("div");
                 char.className = "character";
-                char.innerText = chars[Math.floor(Math.random() * chars.length)];
+                char.innerText = icons[Math.floor(Math.random() * icons.length)];
                 char.style.left = Math.random() * 100 + "%";
                 char.style.top = Math.random() * 100 + "%";
-                char.style.animationDuration = 4 + Math.random() * 5 + "s";
-                char.style.fontSize = 30 + Math.random() * 30 + "px";
+                char.style.animationDuration = 4 + Math.random() * 6 + "s";
+                char.style.fontSize = 28 + Math.random() * 40 + "px";
                 char.style.opacity = 0.3 + Math.random() * 0.5;
                 container.appendChild(char);
             }
         }
 
-        // -------------------- VERIFICACIÓN INICIAL --------------------
-        function showAgeVerification() {
-            let birth = prompt("📅 Para garantizar una experiencia segura, introduce la fecha de nacimiento del niño o niña (formato AAAA-MM-DD):", "2016-01-01");
-            if (!birth) return;
-            let edad = calcularEdad(birth);
-            if (isNaN(edad) || edad < 0 || edad > 100) { alert("Fecha no válida"); showAgeVerification(); return; }
-            iniciarConEdad(edad);
-        }
-
-        let savedMode = localStorage.getItem('userAgeMode');
-        if (savedMode === 'kids' || savedMode === 'normal') {
-            currentAgeMode = savedMode;
-            if (currentAgeMode === 'kids') document.body.classList.add('kids-mode');
-            else document.body.classList.remove('kids-mode');
-            document.getElementById("modeIndicator").innerHTML = (currentAgeMode === 'kids') ? "🧸 Modo Kids" : "🔥 Modo Normal";
-            loadVideosFromRSS();
-        } else {
-            showAgeVerification();
-            loadVideosFromRSS();
-        }
-
-        // -------------------- EVENTOS Y PERSONALIZACIÓN --------------------
-        function setTab(type) {
-            currentListType = type;
-            document.getElementById("tabVideos").classList.toggle("active", type === "video");
-            document.getElementById("TabShorts").classList.toggle("active", type === "short");
-            renderList();
-        }
-        document.getElementById("tabVideos").addEventListener("click", () => setTab("video"));
-        document.getElementById("TabShorts").addEventListener("click", () => setTab("short"));
-        document.getElementById("subscribeBtn").addEventListener("click", () => window.open("https://youtube.com/@LeylaparisX?sub_confirmation=1", "_blank"));
-
-        // Personalización de colores
-        const colorBtn = document.getElementById("colorPickerBtn");
-        const colorPanel = document.getElementById("colorPanel");
-        colorBtn.addEventListener("click", () => { colorPanel.style.display = colorPanel.style.display === "flex" ? "none" : "flex"; });
-        document.getElementById("color1").addEventListener("input", (e) => document.documentElement.style.setProperty('--bg-gradient-start', e.target.value));
-        document.getElementById("color2").addEventListener("input", (e) => document.documentElement.style.setProperty('--bg-gradient-end', e.target.value));
-        document.getElementById("accentColor").addEventListener("input", (e) => document.documentElement.style.setProperty('--accent-color', e.target.value));
-        document.getElementById("resetColors").addEventListener("click", () => {
-            document.documentElement.style.setProperty('--bg-gradient-start', '#0f0c29');
-            document.documentElement.style.setProperty('--bg-gradient-end', '#302b63');
-            document.documentElement.style.setProperty('--accent-color', '#FF0000');
-            document.getElementById("color1").value = "#0f0c29";
-            document.getElementById("color2").value = "#302b63";
-            document.getElementById("accentColor").value = "#FF0000";
+        // Control Parental: redirige al formulario de Google
+        document.getElementById("parentalBtn").addEventListener("click", () => {
+            window.open(PARENTAL_FORM_URL, "_blank");
+            alert("🔐 Se ha abierto el formulario de control parental. Los padres deben rellenarlo para autorizar el modo infantil.");
         });
+
+        // Botón de suscripción y tabs
+        document.getElementById("subscribeBtn").addEventListener("click", () => window.open("https://youtube.com/@LeylaparisX?sub_confirmation=1", "_blank"));
+        document.getElementById("tabVideos").addEventListener("click", () => { currentType = "video"; document.getElementById("tabVideos").classList.add("active"); document.getElementById("TabShorts").classList.remove("active"); updateUI(); });
+        document.getElementById("TabShorts").addEventListener("click", () => { currentType = "short"; document.getElementById("TabShorts").classList.add("active"); document.getElementById("tabVideos").classList.remove("active"); updateUI(); });
+
+        // Inicializar
+        loadVideosFromRSS();
+        toggleKidsMode(false);
     </script>
 </body>
 </html>
